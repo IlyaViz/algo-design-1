@@ -11,11 +11,13 @@ namespace Run
 
         public static void PrintUsedMemory()
         {
+            long memory;
+
             while (MEMORY_MONITORING)
             {
                 Thread.Sleep(2000);
                 Process process = Process.GetCurrentProcess();
-                long memory = process.WorkingSet64;
+                memory = process.WorkingSet64;
                 Console.WriteLine($"Used memory by algo is: {(memory - initMemory) / 1024.0 / 1024.0}+- MB");
             }
         }
@@ -83,6 +85,8 @@ namespace Run
                 algo = new PolyPhaseSort(path);
             }
 
+            Process process = Process.GetCurrentProcess();
+            initMemory = process.WorkingSet64;
             Thread memoryThread = new Thread(PrintUsedMemory);
             memoryThread.Start();
 
@@ -101,9 +105,6 @@ namespace Run
 
         static void Main(string[] args)
         {
-            Process process = Process.GetCurrentProcess();
-            initMemory = process.WorkingSet64;
-
             Run();
         }
     }

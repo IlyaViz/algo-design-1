@@ -54,7 +54,7 @@ namespace ClassLibrary
             using StreamWriter file2 = new StreamWriter(B2_FILE_NAME);
             List<StreamWriter> files = new List<StreamWriter> { file1, file2 };
             int[] seriesCount = new int[2];
-            long[] lastNums = new long[2] { MIN_SYS_NUM, MIN_SYS_NUM };
+            long[] lastNums = { MIN_SYS_NUM, MIN_SYS_NUM };
             int lastUsedFileIndex = 0;
             using StreamReader inFile = new StreamReader(_inFileName);
             string strNum;
@@ -91,6 +91,8 @@ namespace ClassLibrary
                     files[fileIndex].WriteLine(Constants.MIN_NUM - 1 - counter);
                 }
             }
+
+            using (new StreamWriter(B3_FILE_NAME)) ;
         }
 
         private bool FileIsEmpty(string fileName)
