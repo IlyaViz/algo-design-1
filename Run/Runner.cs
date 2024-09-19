@@ -7,7 +7,7 @@ namespace Run
     {
         static bool MEMORY_MONITORING = true;
         const string DEFAULT_INPUT_FILE = "A.txt";
-        static long initMemory; 
+        static long initMemory;
 
         public static void PrintUsedMemory()
         {
@@ -43,7 +43,7 @@ namespace Run
 
                 return list1.SequenceEqual(list2);
             }
-        } 
+        }
 
         public static void Run()
         {
@@ -74,9 +74,11 @@ namespace Run
             string algoType = Console.ReadLine();
 
             PolyPhaseSort algo;
-            if (algoType == "y") {
+            if (algoType == "y")
+            {
                 algo = new PolyPhaseSort(path, size / 8);
-            } else
+            }
+            else
             {
                 algo = new PolyPhaseSort(path);
             }
@@ -102,7 +104,7 @@ namespace Run
             Process process = Process.GetCurrentProcess();
             initMemory = process.WorkingSet64;
 
-            Run(); 
+            Run();
         }
     }
 }
