@@ -95,13 +95,13 @@ namespace ClassLibrary
             using (new StreamWriter(B3_FILE_NAME)) ;
         }
 
-        private bool FileIsEmpty(string fileName)
+        private static bool FileIsEmpty(string fileName)
         {
             using StreamReader file = new StreamReader(fileName);
             return file.ReadLine() == null;
         }
 
-        private void KeepLeftData(long extraNum, StreamReader file)
+        private static void KeepLeftData(long extraNum, StreamReader file)
         {
             string fileName = (file.BaseStream as FileStream).Name;
             string strNum;
@@ -120,7 +120,7 @@ namespace ClassLibrary
             File.Delete(fileName);
             File.Move(TEMP_FILE_NAME, fileName);
         }
-        private void CleanFile(StreamReader file)
+        private static void CleanFile(StreamReader file)
         {
             string fileName = (file.BaseStream as FileStream).Name;
 
@@ -129,7 +129,7 @@ namespace ClassLibrary
             File.Delete(fileName);
             File.Move(TEMP_FILE_NAME, fileName);
         }
-        private void RemoveBelowMinNums(string fileName)
+        private static void RemoveBelowMinNums(string fileName)
         {
             string strNum;
 
