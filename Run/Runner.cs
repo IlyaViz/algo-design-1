@@ -22,39 +22,28 @@ namespace Run
             }
         }
 
-        public static bool ValidateResult(string inFileName, string outFileName)
+        public static bool ValidateResult(string file1Name, string file2Name)
         {
-            using (StreamReader inFile = new StreamReader(inFileName))
-            using (StreamReader outFile = new StreamReader(outFileName))
+            using (StreamReader file1 = new StreamReader(file1Name))
+            using (StreamReader file2 = new StreamReader(file2Name))
             {
                 string strNum;
-                List<long> inList = new List<long>();
-                List<long> outList = new List<long>();
+                List<long> list1 = new List<long>();
+                List<long> list2 = new List<long>();
 
-                while ((strNum = inFile.ReadLine()) != null)
+                while ((strNum = file1.ReadLine()) != null)
                 {
-                    inList.Add(long.Parse(strNum));
+                    list1.Add(long.Parse(strNum));
                 }
 
-                while ((strNum = outFile.ReadLine()) != null)
+                while ((strNum = file2.ReadLine()) != null)
                 {
-                    outList.Add(long.Parse(strNum));
+                    list2.Add(long.Parse(strNum));
                 }
 
-                inList.Sort();
+                list1.Sort();
 
-                bool equal = true;
-
-                for (int i = 0; i < inList.Count; i++)
-                {
-                    if (inList[i] != outList[i])
-                    {
-                        equal = false;
-                        break;
-                    }
-                }
-
-                return equal;
+                return list1.SequenceEqual(list2);
             }
         }
 
@@ -89,7 +78,7 @@ namespace Run
             PolyPhaseSort algo;
             if (algoType == "y")
             {
-                algo = new PolyPhaseSort(path, size / 10); // 4 series
+                algo = new PolyPhaseSort(path, size / 8);
             }
             else
             {
