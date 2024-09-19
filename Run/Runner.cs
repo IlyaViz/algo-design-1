@@ -78,7 +78,7 @@ namespace Run
             PolyPhaseSort algo;
             if (algoType == "y")
             {
-                algo = new PolyPhaseSort(path, size / 8);
+                algo = new PolyPhaseSort(path, size / 10);
             }
             else
             {
