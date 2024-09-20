@@ -262,11 +262,12 @@ namespace ClassLibrary
 
             void GetNextData(int fileIndex)
             {
+                lastNums[fileIndex] = newNums[fileIndex];
+
                 string strNum;
 
                 if ((strNum = inFiles[fileIndex].ReadLine()) != null)
                 {
-                    lastNums[fileIndex] = newNums[fileIndex];
                     newNums[fileIndex] = long.Parse(strNum);
                 }
                 else
@@ -281,7 +282,7 @@ namespace ClassLibrary
                 {
                     outFile.WriteLine(newNums[fileIndex]);
                     GetNextData(fileIndex);
-                } while (newNums[fileIndex] >= lastNums[fileIndex] && newNums[fileIndex] != MIN_SYS_NUM);
+                } while (newNums[fileIndex] >= lastNums[fileIndex]);
 
                 lastNums[fileIndex] = MIN_SYS_NUM;
                 seriesCompleted[0] = true;
