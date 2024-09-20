@@ -26,13 +26,13 @@ namespace ClassLibrary
             _memoryLimit = memoryLimit;
         }
 
-        private static int GetNextFibonacciNum(int n, HashSet<int> unavailable)
+        private static long GetNextFibonacciNum(long n, HashSet<long> unavailable)
         {
             if (n == 0) return 0;
 
-            int prev = 0;
-            int current = 1;
-            int temp;
+            long prev = 0;
+            long current = 1;
+            long temp;
 
             while (current < n || unavailable.Contains(current))
             {
@@ -73,7 +73,7 @@ namespace ClassLibrary
 
         private void AddFictiousSeries()
         {
-            int[] seriesCount = new int[2];
+            long[] seriesCount = new long[2];
             long lastNum = MIN_SYS_NUM;
             long num;
             string strNum;
@@ -109,9 +109,9 @@ namespace ClassLibrary
             {
                 List<StreamWriter> files = new List<StreamWriter> { file1, file2 }; 
 
-                HashSet<int> usedFibonacciNums = new HashSet<int>();
-                int fibonacciNum;
-                int extraSeries;
+                HashSet<long> usedFibonacciNums = new HashSet<long>();
+                long fibonacciNum;
+                long extraSeries;
 
                 for (int fileIndex = 0; fileIndex < 2; fileIndex++)
                 {
