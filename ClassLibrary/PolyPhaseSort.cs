@@ -285,8 +285,7 @@ namespace ClassLibrary
                 } while (newNums[fileIndex] >= lastNums[fileIndex]);
 
                 lastNums[fileIndex] = MIN_SYS_NUM;
-                seriesCompleted[0] = true;
-                seriesCompleted[1] = true;
+                seriesCompleted[fileIndex] = true;
             }
 
             void Finalize(int fileIndex)
@@ -321,10 +320,12 @@ namespace ClassLibrary
             {
                 if (newNums[0] < lastNums[0] && !seriesCompleted[1])
                 {
+                    seriesCompleted[0] = true;
                     ReadLeftSeries(1);
                 }
                 else if (newNums[1] < lastNums[1] && !seriesCompleted[0])
                 {
+                    seriesCompleted[1] = true;
                     ReadLeftSeries(0);
                 }
                 else
