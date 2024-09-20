@@ -284,7 +284,6 @@ namespace ClassLibrary
                     GetNextData(fileIndex);
                 } while (newNums[fileIndex] >= lastNums[fileIndex]);
 
-                lastNums[fileIndex] = MIN_SYS_NUM;
                 seriesCompleted[fileIndex] = true;
             }
 
