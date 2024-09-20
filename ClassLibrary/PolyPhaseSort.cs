@@ -357,6 +357,11 @@ namespace ClassLibrary
 
         public string Sort()
         {
+            if (FileIsEmpty(_inFileName))
+            {
+                return _inFileName;
+            }
+
             Stopwatch watch = Stopwatch.StartNew();
 
             if (_memoryLimit != 0)
