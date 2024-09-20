@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Buffers;
+using System.Diagnostics;
 
 namespace ClassLibrary
 {
@@ -43,20 +44,14 @@ namespace ClassLibrary
             return current;
         }
 
-        private static int GetNextFileIndex(int filesCount, int index)
-        {
-            return (index + 1) % filesCount;
-        }
-
-        private void FilesInit()
+        private void DistributeInFile()
         {
             using StreamWriter file1 = new StreamWriter(B1_FILE_NAME);
             using StreamWriter file2 = new StreamWriter(B2_FILE_NAME);
             List<StreamWriter> files = new List<StreamWriter> { file1, file2 };
-            int[] seriesCount = new int[2];
+            using StreamReader inFile = new StreamReader(_inFileName);
             long[] lastNums = { MIN_SYS_NUM, MIN_SYS_NUM };
             int lastUsedFileIndex = 0;
-            using StreamReader inFile = new StreamReader(_inFileName);
             string strNum;
             long num;
 
@@ -66,33 +61,77 @@ namespace ClassLibrary
 
                 if (num < lastNums[lastUsedFileIndex])
                 {
-                    seriesCount[lastUsedFileIndex]++;
-                    lastUsedFileIndex = GetNextFileIndex(files.Count, lastUsedFileIndex);
+                    lastUsedFileIndex = 1 - lastUsedFileIndex;
                 }
 
                 files[lastUsedFileIndex].WriteLine(num);
                 lastNums[lastUsedFileIndex] = num;
             }
 
-            seriesCount[lastUsedFileIndex]++;
+            using (new StreamWriter(B3_FILE_NAME)) { };
+        }
 
-            HashSet<int> usedFibonacciNums = new HashSet<int>();
+        private void AddFictiousSeries()
+        {
+            int[] seriesCount = new int[2];
+            long lastNum = MIN_SYS_NUM;
+            long num;
+            string strNum;
 
-            for (int fileIndex = 0; fileIndex < 2; fileIndex++)
+            using (StreamReader file1 = new StreamReader(B1_FILE_NAME))
+            using (StreamReader file2 = new StreamReader(B2_FILE_NAME))
             {
-                int fibonacciNum = GetNextFibonacciNum(seriesCount[fileIndex], usedFibonacciNums);
-                usedFibonacciNums.Add(fibonacciNum);
+                List<StreamReader> files = new List<StreamReader> { file1, file2 };
 
-                int extraSeries = fibonacciNum - seriesCount[fileIndex];
-                seriesCount[fileIndex] += extraSeries;
-
-                for (int counter = 0; counter < extraSeries; counter++)
+                for (int fileIndex = 0; fileIndex < files.Count; fileIndex++)
                 {
-                    files[fileIndex].WriteLine(Constants.MIN_NUM - 1 - counter);
+                    if ((strNum = files[fileIndex].ReadLine()) != null)
+                    {
+                        lastNum = long.Parse(strNum);
+                        seriesCount[fileIndex] += 1;
+                    }
+
+                    while ((strNum = files[fileIndex].ReadLine()) != null)
+                    {
+                        num = long.Parse(strNum);
+
+                        if (num < lastNum)
+                        {
+                            seriesCount[fileIndex] += 1;
+                        }
+                        lastNum = num;
+                    }
                 }
             }
 
-            using (new StreamWriter(B3_FILE_NAME)) ;
+            using (StreamWriter file1 = File.AppendText(B1_FILE_NAME))
+            using (StreamWriter file2 = File.AppendText(B2_FILE_NAME))
+            {
+                List<StreamWriter> files = new List<StreamWriter> { file1, file2 }; 
+
+                HashSet<int> usedFibonacciNums = new HashSet<int>();
+                int fibonacciNum;
+                int extraSeries;
+
+                for (int fileIndex = 0; fileIndex < 2; fileIndex++)
+                {
+                    fibonacciNum = GetNextFibonacciNum(seriesCount[fileIndex], usedFibonacciNums);
+                    usedFibonacciNums.Add(fibonacciNum);
+
+                    extraSeries = fibonacciNum - seriesCount[fileIndex];
+
+                    for (int counter = 0; counter < extraSeries; counter++)
+                    {
+                        files[fileIndex].WriteLine(Constants.MIN_NUM - 1 - counter);
+                    }
+                }
+            }
+        }
+
+        private void FilesInit()
+        {
+            DistributeInFile();
+            AddFictiousSeries();
         }
 
         private static bool FileIsEmpty(string fileName)
@@ -238,13 +277,13 @@ namespace ClassLibrary
 
             void ReadLeftSeries(int fileIndex)
             {
-                while (newNums[fileIndex] >= lastNums[fileIndex] && newNums[fileIndex] != MIN_SYS_NUM)
+                do
                 {
                     outFile.WriteLine(newNums[fileIndex]);
                     GetNextData(fileIndex);
-                }
+                } while (newNums[fileIndex] >= lastNums[fileIndex] && newNums[fileIndex] != MIN_SYS_NUM);
 
-                lastNums[fileIndex] = newNums[fileIndex];
+                lastNums[fileIndex] = MIN_SYS_NUM;
                 seriesCompleted[0] = true;
                 seriesCompleted[1] = true;
             }
@@ -330,7 +369,7 @@ namespace ClassLibrary
             watch.Stop();
             Console.WriteLine($"files init: {watch.Elapsed.TotalSeconds} s");
 
-            string[] fileNames = new[] { B1_FILE_NAME, B2_FILE_NAME, B3_FILE_NAME };
+            string[] fileNames = { B1_FILE_NAME, B2_FILE_NAME, B3_FILE_NAME };
             bool[] filesEmpty = fileNames.Select(FileIsEmpty).ToArray();
 
             int num = 0;
