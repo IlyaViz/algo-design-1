@@ -22,28 +22,28 @@ namespace Run
             }
         }
 
-        public static bool ValidateResult(string file1Name, string file2Name)
+        public static bool ValidateResult(string inFileName, string resultFileName)
         {
-            using (StreamReader file1 = new StreamReader(file1Name))
-            using (StreamReader file2 = new StreamReader(file2Name))
+            using (StreamReader inFile = new StreamReader(inFileName))
+            using (StreamReader resultFile = new StreamReader(resultFileName))
             {
                 string strNum;
-                List<long> list1 = new List<long>();
-                List<long> list2 = new List<long>();
+                List<long> inList = new List<long>();
+                List<long> resultList = new List<long>();
 
-                while ((strNum = file1.ReadLine()) != null)
+                while ((strNum = inFile.ReadLine()) != null)
                 {
-                    list1.Add(long.Parse(strNum));
+                    inList.Add(long.Parse(strNum));
                 }
 
-                while ((strNum = file2.ReadLine()) != null)
+                while ((strNum = resultFile.ReadLine()) != null)
                 {
-                    list2.Add(long.Parse(strNum));
+                    resultList.Add(long.Parse(strNum));
                 }
 
-                list1.Sort();
+                inList.Sort();
 
-                return list1.SequenceEqual(list2);
+                return inList.SequenceEqual(resultList);
             }
         }
 
